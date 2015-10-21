@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SlidingMenu">
+        <!--单位为尺寸 可以为dp px等-->
+        <attr name="rightPadding" format="dimension" />
+    </declare-styleable>
+</resources>

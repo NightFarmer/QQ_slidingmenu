@@ -1,0 +1,21 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <!-- toolbar（actionbar）颜色 -->
+        <item name="colorPrimary">#FF0000</item>
+        <!-- 状态栏颜色 -->
+        <item name="colorPrimaryDark">#FF0000</item>
+        <!-- 窗口的背景颜色 -->
+        <item name="android:windowBackground">@android:color/white</item>
+        <!--状态栏字体颜色-->
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <!-- 图标颜色 -->
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
+</resources>
