@@ -1,1 +1,1 @@
-include ':app', ':qqslidingmenu'
+include ':sample', ':qqslidingmenu'
