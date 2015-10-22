@@ -8,9 +8,9 @@
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <!-- toolbar（actionbar）颜色 -->
-        <item name="colorPrimary">#FF0000</item>
+        <item name="colorPrimary">#18B4ED</item>
         <!-- 状态栏颜色 -->
-        <item name="colorPrimaryDark">#FF0000</item>
+        <item name="colorPrimaryDark">#18B4ED</item>
         <!-- 窗口的背景颜色 -->
         <item name="android:windowBackground">@android:color/white</item>
         <!--状态栏字体颜色-->

@@ -1,67 +1,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:slidingmenu="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <include layout="@layout/layout_main_bgd" />
 
     <com.zhangfan.qqslidingmenu.SlidingMenu
         android:id="@+id/slidingMenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bgd"
         android:overScrollMode="never"
-        slidingmenu:rightPadding="90dp">
+        app:rightPadding="90dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <include
                 android:id="@+id/menuLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#77ff0000">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="xxxxx" />
-
-            </LinearLayout>
+                layout="@layout/layout_main_left_menu" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/black" />
 
-            <com.zhangfan.qqslidingmenu.SlidingContent
+            <include
+                layout="@layout/layout_main_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_toRightOf="@id/menuLayout"
-                android:background="#ff00ff">
+                android:layout_toRightOf="@id/menuLayout" />
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/colorPrimaryDark"
-                    android:fitsSystemWindows="true"
-                    android:minHeight="?attr/actionBarSize">
-
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="toggleMenu"
-                        android:text="toggle" />
-                </android.support.v7.widget.Toolbar>
-
-                <ListView
-                    android:id="@+id/listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.zhangfan.qqslidingmenu.SlidingContent>
         </RelativeLayout>
     </com.zhangfan.qqslidingmenu.SlidingMenu>
 
