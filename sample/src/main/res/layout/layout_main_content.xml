@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimaryDark"
         android:fitsSystemWindows="true"
-        android:minHeight="?attr/actionBarSize">
+        android:minHeight="50dp">
 
         <com.zhy.android.percent.support.PercentRelativeLayout
-            android:minHeight="?attr/actionBarSize"
+            android:minHeight="50dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <Button
+            <TextView
                 android:id="@+id/button"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"

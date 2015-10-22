@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#181E24">
@@ -8,15 +7,15 @@
     <ImageView
         android:id="@+id/qq_com_bg_pic"
         android:layout_width="match_parent"
-        android:scaleType="fitStart"
-        android:src="@drawable/qq_com_bg_pic"
-        app:layout_heightPercent="45%w" />
+        android:layout_height="170dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/qq_com_bg_pic" />
 
     <ImageView
         android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:layout_alignBottom="@id/qq_com_bg_pic"
         android:scaleType="fitXY"
-        android:src="@drawable/qq_setting_me_bgmask"
-        app:layout_heightPercent="20%w" />
+        android:src="@drawable/qq_setting_me_bgmask" />
 
-</com.zhy.android.percent.support.PercentRelativeLayout>
+</RelativeLayout>
