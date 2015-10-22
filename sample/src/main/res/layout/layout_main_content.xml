@@ -15,11 +15,13 @@
         android:minHeight="?attr/actionBarSize">
 
         <com.zhy.android.percent.support.PercentRelativeLayout
+            android:minHeight="?attr/actionBarSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/button"
+                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="toggleMenu"
