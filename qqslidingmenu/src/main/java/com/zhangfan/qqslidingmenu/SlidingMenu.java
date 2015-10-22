@@ -5,26 +5,28 @@ import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.OverScroller;
 
 import com.nineoldandroids.view.ViewHelper;
+
+import java.lang.reflect.Field;
 
 /**
  * Created by zhangfan on 2015/10/21. 布局父容器
  */
 public class SlidingMenu extends HorizontalScrollView {
 
-    private ViewGroup mWrapper;
     private ViewGroup mMenu;
     private ViewGroup mContent;
+
+    private OverScroller mScroller;
 
     private int mScreenWidth;
     protected int mMenuWidth;
@@ -37,10 +39,6 @@ public class SlidingMenu extends HorizontalScrollView {
 
     /**
      * 使用自定义属性时，调用
-     *
-     * @param context
-     * @param attrs
-     * @param defStyleAttr
      */
     public SlidingMenu(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -62,13 +60,18 @@ public class SlidingMenu extends HorizontalScrollView {
         //把dp转化为px
 //        mMenuRightPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, context.getResources().getDisplayMetrics());
 
+        final Field fScroller;
+        try {
+            fScroller = HorizontalScrollView.class.getDeclaredField("mScroller");
+            fScroller.setAccessible(true);
+            mScroller = (OverScroller) fScroller.get(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 布局文件中如果不使用自定义控件属性，则会调用此两个参数的构造方法
-     *
-     * @param context
-     * @param attrs
      */
     public SlidingMenu(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -76,8 +79,6 @@ public class SlidingMenu extends HorizontalScrollView {
 
     /**
      * 代码中创建时调用
-     *
-     * @param context
      */
     public SlidingMenu(Context context) {
         this(context, null);
@@ -85,14 +86,11 @@ public class SlidingMenu extends HorizontalScrollView {
 
     /**
      * 设置子view的宽和高，设置自己的宽和高
-     *
-     * @param widthMeasureSpec
-     * @param heightMeasureSpec
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (!once) {
-            mWrapper = (ViewGroup) getChildAt(0);
+            ViewGroup mWrapper = (ViewGroup) getChildAt(0);
             mMenu = (ViewGroup) mWrapper.getChildAt(0);
             shade = mWrapper.getChildAt(1);
             mContent = (ViewGroup) mWrapper.getChildAt(2);
@@ -123,22 +121,23 @@ public class SlidingMenu extends HorizontalScrollView {
     public boolean onTouchEvent(@NonNull MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_UP:
+
                 //处理点击松开
                 if (isOpen && ev.getX() > mMenuWidth && ev.getX() == touchDownX) {
-                    smoothScrollTo(mMenuWidth, 0);
+                    smoothScrollTo(mMenuWidth);
                     isOpen = false;
                     return true;
                 }
 
-                //处理抛掷手势
-                if (System.currentTimeMillis() - scrollTime < 500) {
+                //处理抛掷手势，停顿小于100毫秒则识别为抛掷
+                if (System.currentTimeMillis() - scrollTime < 100) {
                     if (direction > 0) {
                         //open menu
-                        smoothScrollTo(mMenuWidth, 0);
+                        smoothScrollTo(mMenuWidth);
                         isOpen = false;
                     } else {
                         //close menu
-                        smoothScrollTo(0, 0);
+                        smoothScrollTo(0);
                         isOpen = true;
                     }
                     return true;
@@ -148,11 +147,11 @@ public class SlidingMenu extends HorizontalScrollView {
                 int scrollX = getScrollX();
                 if (scrollX >= mMenuWidth / 2) {
                     //open menu
-                    smoothScrollTo(mMenuWidth, 0);
+                    smoothScrollTo(mMenuWidth);
                     isOpen = false;
                 } else {
                     //close menu
-                    smoothScrollTo(0, 0);
+                    smoothScrollTo(0);
                     isOpen = true;
                 }
                 return true;
@@ -170,7 +169,7 @@ public class SlidingMenu extends HorizontalScrollView {
      */
     public void openMenu() {
         if (isOpen) return;
-        smoothScrollTo(0, 0);
+        smoothScrollTo(0);
         isOpen = true;
     }
 
@@ -179,7 +178,7 @@ public class SlidingMenu extends HorizontalScrollView {
      */
     public void closeMenu() {
         if (!isOpen) return;
-        smoothScrollTo(mMenuWidth, 0);
+        smoothScrollTo(mMenuWidth);
         isOpen = false;
     }
 
@@ -252,4 +251,37 @@ public class SlidingMenu extends HorizontalScrollView {
         void onScroll(float scale);
     }
 
+    public final void smoothScrollTo(int x) {
+        try {
+            int mScrollX = getScrollX();
+            smoothScrollBy(x - mScrollX);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public final void smoothScrollBy(int dx) throws Exception {
+        if (dx == 0) return;
+        final Field fLastScroll = HorizontalScrollView.class.getDeclaredField("mLastScroll");
+        fLastScroll.setAccessible(true);
+        long mLastScroll;
+        int mPaddingRight = getPaddingRight();
+        int mPaddingLeft = getPaddingLeft();
+        if (getChildCount() == 0) {
+            return;
+        }
+        if (!mScroller.isFinished()) {
+            mScroller.abortAnimation();
+        }
+        final int width = getWidth() - mPaddingRight - mPaddingLeft;
+        final int right = getChildAt(0).getWidth();
+        final int maxX = Math.max(0, right - width);
+        final int scrollX = getScrollX();
+        dx = Math.max(0, Math.min(scrollX + dx, maxX)) - scrollX;
+
+        mScroller.startScroll(scrollX, getScrollX(), dx, 0, 450);
+        invalidate();
+        mLastScroll = AnimationUtils.currentAnimationTimeMillis();
+        fLastScroll.setLong(this, mLastScroll);
+    }
 }
