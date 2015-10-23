@@ -115,10 +115,17 @@ public class SlidingMenu extends HorizontalScrollView {
         }
     }
 
+    ScrollJudger scrollJudger;
+
+    public interface ScrollJudger{
+        boolean couldScroll(MotionEvent ev);
+    }
+
     float touchDownX;
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent ev) {
+        if (scrollJudger!=null && !scrollJudger.couldScroll(ev)) return true;
         switch (ev.getAction()) {
             case MotionEvent.ACTION_UP:
 
